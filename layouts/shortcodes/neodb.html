@@ -1,0 +1,137 @@
+{{/*
+  Hugo NeoDB Shortcode Card Component
+  Usage:
+    {{< neodb "https://neodb.social/books/0189a123-4567-89ab-cdef-0123456789ab" "Custom comment" >}}
+    {{< neodb url="https://neodb.social/movies/0189a123-4567-89ab-cdef-0123456789ab" >}}
+    {{< neodb "https://neodb.social/game/0189a123-4567-89ab-cdef-0123456789ab" >}}
+*/}}
+
+{{/* Extract parameters */}}
+{{ $url := "" }}
+{{ $paramComment := "" }}
+
+{{ if .IsNamedParams }}
+  {{ $url = .Get "url" }}
+  {{ $paramComment = .Get "comment" }}
+{{ else }}
+  {{ $url = .Get 0 }}
+  {{ if ge (len .Params) 2 }}
+    {{ $paramComment = .Get 1 }}
+  {{ end }}
+{{ end }}
+
+{{ $userComment := $paramComment | strings.TrimSpace }}
+
+{{/* Extract UUID from URL */}}
+{{ $targetUUID := "" }}
+{{ if $url }}
+  {{ $parts := split (strings.TrimRight "/" $url) "/" }}
+  {{ $lastPart := index $parts (sub (len $parts) 1) }}
+  {{ $targetUUID = $lastPart }}
+{{ end }}
+
+{{/* Search across all years in data/neodb */}}
+{{ $foundItem := dict }}
+{{ $dataNeodb := hugo.Data.neodb | default .Site.Data.neodb }}
+{{ if and $targetUUID $dataNeodb }}
+  {{ range $year, $items := $dataNeodb }}
+    {{ range $item := $items }}
+      {{ if eq (string $item.uuid) (string $targetUUID) }}
+        {{ $foundItem = $item }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Render Card if found */}}
+{{ if $foundItem.uuid }}
+  {{ $title := $foundItem.title | default "NeoDB Item" }}
+  {{ $category := $foundItem.category | lower }}
+  {{ $shelfType := $foundItem.shelf_type | lower }}
+  {{ $coverUrl := $foundItem.cover_url }}
+  {{ $createdTime := $foundItem.created_time }}
+  {{ $cachedComment := $foundItem.comment_text }}
+  {{ $finalComment := $userComment | default $cachedComment }}
+
+  {{/* Action Verb Calculation */}}
+  {{ $verbBase := "看" }}
+  {{ if eq $category "book" }}
+    {{ $verbBase = "读" }}
+  {{ else if or (eq $category "podcast") (eq $category "album") }}
+    {{ $verbBase = "听" }}
+  {{ else if eq $category "game" }}
+    {{ $verbBase = "玩" }}
+  {{ else if or (eq $category "movie") (eq $category "tv") (eq $category "performance") }}
+    {{ $verbBase = "看" }}
+  {{ end }}
+
+  {{ $actionVerb := "已记录" }}
+  {{ if eq $shelfType "wishlist" }}
+    {{ $actionVerb = printf "想%s" $verbBase }}
+  {{ else if eq $shelfType "progress" }}
+    {{ $actionVerb = printf "在%s" $verbBase }}
+  {{ else if eq $shelfType "complete" }}
+    {{ $actionVerb = printf "%s过" $verbBase }}
+  {{ else if eq $shelfType "dropped" }}
+    {{ $actionVerb = printf "不%s了" $verbBase }}
+  {{ end }}
+
+  {{/* Format Date */}}
+  {{ $formattedDate := "" }}
+  {{ if $createdTime }}
+    {{ $formattedDate = substr $createdTime 0 10 }}
+  {{ end }}
+
+  <div class="neodb-card my-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/80 shadow-sm hover:shadow-md transition-shadow">
+    {{ if $coverUrl }}
+      <div class="neodb-cover shrink-0 w-28 h-40 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-700 shadow">
+        <img src="{{ $coverUrl }}" alt="{{ $title }}" class="w-full h-full object-cover nozoom" loading="lazy" />
+      </div>
+    {{ end }}
+
+    <div class="neodb-info flex flex-col justify-between grow w-full">
+      <div>
+        <div class="flex items-center justify-between gap-2 flex-wrap mb-1">
+          <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="neodb-title font-bold text-lg text-primary-600 dark:text-primary-400 hover:underline">
+            {{ $title }}
+          </a>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="px-2 py-0.5 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 font-medium">
+              {{ $actionVerb }}
+            </span>
+            {{ if $category }}
+              <span class="px-2 py-0.5 rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 uppercase font-semibold">
+                {{ $category }}
+              </span>
+            {{ end }}
+          </div>
+        </div>
+
+        {{ if $formattedDate }}
+          <div class="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+            标记日期：<time>{{ $formattedDate }}</time>
+          </div>
+        {{ end }}
+
+        {{ if $finalComment }}
+          <div class="neodb-comment mt-2 p-2.5 rounded bg-white dark:bg-neutral-900/60 border border-neutral-100 dark:border-neutral-800 text-sm text-neutral-700 dark:text-neutral-300 italic">
+            “ {{ $finalComment }} ”
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+
+{{ else }}
+
+  {{/* Fallback when item is not yet synced */}}
+  <div class="neodb-fallback my-4 p-4 rounded-xl border border-dashed border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 text-sm flex items-center gap-3">
+    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <div>
+      <strong>NeoDB 条目提示：</strong> 该条目 (UUID: <code class="text-xs">{{ $targetUUID }}</code>) 尚未同步，等待同步脚本运行后自动显示。
+    </div>
+  </div>
+
+{{ end }}

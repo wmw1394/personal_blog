@@ -1,0 +1,51 @@
+name: Sync NeoDB Data
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run daily at 02:00 UTC
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  sync-neodb:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+
+      - name: Run NeoDB Sync Script
+        env:
+          NEODB_TOKEN: ${{ secrets.NEODB_TOKEN }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_DOMAIN: ${{ secrets.R2_DOMAIN }}
+        run: |
+          python scripts/sync_neodb.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          if [ -n "$(git status --porcelain data/neodb)" ]; then
+            git add data/neodb
+            git commit -m "chore: sync neodb shelf data [skip ci]"
+            git push
+          else
+            echo "No NeoDB data changes detected. Skipping commit."
+          fi
