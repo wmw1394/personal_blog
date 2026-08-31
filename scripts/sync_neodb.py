@@ -126,8 +126,35 @@ def fetch_shelf_data(shelf_type: str, token: str) -> List[Dict[str, Any]]:
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, Gecko) Chrome/120.0.0.0 Safari/537.36",
     }
 
+    # Candidate URL templates for NeoDB instance variations
+    candidate_url_templates = [
+        f"{NEODB_API_BASE}/me/shelf/{shelf_type}?page={{page}}",
+        f"{NEODB_API_BASE}/me/shelf/{shelf_type}/?page={{page}}",
+        f"{NEODB_API_BASE}/me/shelf/all?shelf_type={shelf_type}&page={{page}}",
+    ]
+
+    working_template = None
+
     while True:
-        url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}/?page={page}"
+        if not working_template:
+            for tmpl in candidate_url_templates:
+                test_url = tmpl.format(page=page)
+                try:
+                    resp = requests.get(test_url, headers=headers, timeout=20, allow_redirects=True)
+                    if resp.status_code == 200:
+                        working_template = tmpl
+                        logging.info(f"Discovered working endpoint template: {tmpl}")
+                        break
+                    else:
+                        logging.warning(f"Endpoint candidate failed ({test_url}): HTTP {resp.status_code}")
+                except Exception as e:
+                    logging.warning(f"Endpoint candidate exception ({test_url}): {e}")
+            
+            if not working_template:
+                logging.error(f"None of the candidate API endpoints worked for shelf '{shelf_type}'.")
+                break
+
+        url = working_template.format(page=page)
         try:
             resp = requests.get(url, headers=headers, timeout=20, allow_redirects=True)
             if resp.status_code != 200:
