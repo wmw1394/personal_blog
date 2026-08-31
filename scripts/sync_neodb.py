@@ -11,20 +11,10 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional
 import requests
 import yaml
+from dotenv import load_dotenv
 
-# Try loading python-dotenv or fallback .env parser
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
-    if os.path.exists(env_file):
-        with open(env_file, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ[k.strip()] = v.strip().strip("'\"")
+# Load local .env file if present
+load_dotenv()
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -39,8 +29,9 @@ R2_DOMAIN = os.environ.get("R2_DOMAIN")
 
 NEODB_API_BASE = "https://neodb.social/api"
 SHELF_TYPES = ["complete", "wishlist", "progress", "dropped"]
+CATEGORIES = ["book", "movie", "tv", "music", "game", "podcast"]
 
-# Optional boto3 client for Cloudflare R2
+# Initialize boto3 S3 client for Cloudflare R2 if credentials exist
 s3_client = None
 if R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY and R2_BUCKET and R2_ACCOUNT_ID:
     try:
@@ -88,7 +79,6 @@ def upload_cover_to_r2(item_uuid: str, original_url: str) -> str:
         return original_url
 
     try:
-        # Fetch original cover image
         resp = requests.get(original_url, timeout=15)
         if resp.status_code != 200:
             logging.warning(f"Failed to download image from {original_url}: HTTP {resp.status_code}")
@@ -102,22 +92,15 @@ def upload_cover_to_r2(item_uuid: str, original_url: str) -> str:
         try:
             s3_client.head_object(Bucket=R2_BUCKET, Key=r2_key)
             logging.info(f"Cover already exists in R2: {r2_key}")
-        except ClientError as e:
-            # 404 means object does not exist, so we upload
-            error_code = e.response.get("Error", {}).get("Code", "")
-            if error_code in ["404", "NoSuchKey", "NotFound"]:
-                s3_client.put_object(
-                    Bucket=R2_BUCKET,
-                    Key=r2_key,
-                    Body=resp.content,
-                    ContentType=content_type or "image/jpeg",
-                )
-                logging.info(f"Uploaded cover to R2: {r2_key}")
-            else:
-                logging.warning(f"R2 head_object error for {r2_key}: {e}")
-                return original_url
+        except Exception as e:
+            s3_client.put_object(
+                Bucket=R2_BUCKET,
+                Key=r2_key,
+                Body=resp.content,
+                ContentType=content_type or "image/jpeg",
+            )
+            logging.info(f"Uploaded cover to R2: {r2_key}")
 
-        # Format public URL
         domain = (R2_DOMAIN or "").strip().rstrip("/")
         if domain:
             if not domain.startswith("http://") and not domain.startswith("https://"):
@@ -130,18 +113,29 @@ def upload_cover_to_r2(item_uuid: str, original_url: str) -> str:
         return original_url
 
 
-def fetch_shelf_data(shelf_type: str, token: str) -> List[Dict[str, Any]]:
-    """Fetch all pages for a given shelf status from NeoDB API."""
+def fetch_shelf_items(shelf_type: str, category: str, token: str) -> List[Dict[str, Any]]:
+    """Fetch items for a specific (shelf_type, category) combination."""
     items = []
     page = 1
-    headers = {"Authorization": f"Bearer {token}", "User-Agent": "Hugo-NeoDB-Sync/1.0"}
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, Gecko) Chrome/120.0.0.0 Safari/537.36",
+    }
 
     while True:
-        url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}?page={page}"
+        # User requested URL format: /api/me/shelf/all?category={category}&type={shelf_type}&page={page}
+        url = f"{NEODB_API_BASE}/me/shelf/all?category={category}&type={shelf_type}&page={page}"
         try:
             resp = requests.get(url, headers=headers, timeout=20)
+            
+            # Fallback if type parameter name is shelf_type or endpoint varies
             if resp.status_code != 200:
-                logging.warning(f"Failed fetching {shelf_type} page {page}: HTTP {resp.status_code}")
+                alt_url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}?category={category}&page={page}"
+                resp = requests.get(alt_url, headers=headers, timeout=20)
+
+            if resp.status_code != 200:
+                logging.warning(f"Failed fetching {category}/{shelf_type} page {page}: HTTP {resp.status_code}")
                 break
 
             data = resp.json()
@@ -157,10 +151,10 @@ def fetch_shelf_data(shelf_type: str, token: str) -> List[Dict[str, Any]]:
             page += 1
 
         except Exception as e:
-            logging.warning(f"Exception fetching {shelf_type} page {page}: {e}")
+            logging.warning(f"Exception fetching {category}/{shelf_type} page {page}: {e}")
             break
 
-    logging.info(f"Fetched {len(items)} items from shelf '{shelf_type}'.")
+    logging.info(f"Fetched {len(items)} item(s) for category '{category}' and shelf '{shelf_type}'.")
     return items
 
 
@@ -175,10 +169,9 @@ def parse_year(created_time_str: Optional[str]) -> str:
 
 def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[str, Dict[str, Dict[str, Any]]]:
     """
-    Process and deduplicate raw API shelf items.
+    Process and deduplicate raw API shelf items by uuid.
     Returns dictionary mapping year -> { uuid -> item_dict }.
     """
-    # Map by year -> uuid -> item_dict
     grouped: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
     for shelf_type, items in raw_items_by_shelf.items():
@@ -189,13 +182,12 @@ def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[s
                 if not uuid:
                     continue
 
-                title = item_info.get("title") or ""
-                category = item_info.get("category") or ""
+                title = item_info.get("title") or raw.get("title") or ""
+                category = item_info.get("category") or raw.get("category") or ""
                 cover_url = item_info.get("cover_image_url") or item_info.get("cover_url") or ""
                 created_time = raw.get("created_time") or raw.get("created_at") or ""
                 comment_text = raw.get("comment_text") or raw.get("body") or ""
 
-                # Upload cover to Cloudflare R2 if available
                 if cover_url:
                     cover_url = upload_cover_to_r2(uuid, cover_url)
 
@@ -204,7 +196,6 @@ def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[s
                 if year not in grouped:
                     grouped[year] = {}
 
-                # Build standardized item schema
                 item_entry = {
                     "uuid": uuid,
                     "title": title,
@@ -215,7 +206,7 @@ def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[s
                     "comment_text": comment_text,
                 }
 
-                # Keep first occurrence or deduplicate by uuid
+                # Deduplicate by uuid (keep first)
                 if uuid not in grouped[year]:
                     grouped[year][uuid] = item_entry
 
@@ -246,15 +237,11 @@ def merge_and_save(grouped_new_data: Dict[str, Dict[str, Dict[str, Any]]], data_
             except Exception as e:
                 logging.warning(f"Error reading existing YAML {yaml_path}: {e}")
 
-        # Build map of existing items by uuid
         existing_map: Dict[str, Dict[str, Any]] = {}
         for item in existing_items:
             if isinstance(item, dict) and "uuid" in item:
                 existing_map[item["uuid"]] = item
 
-        # Merge strategy:
-        # Match existing entries by uuid. Fill missing fields only.
-        # NEVER overwrite existing title, cover_url, comment_text if present!
         merged_list: List[Dict[str, Any]] = []
 
         for uuid, new_item in new_uuid_map.items():
@@ -274,18 +261,15 @@ def merge_and_save(grouped_new_data: Dict[str, Dict[str, Dict[str, Any]]], data_
             else:
                 merged_list.append(new_item)
 
-        # Retain any remaining existing items not returned by API
         for remaining_item in existing_map.values():
             merged_list.append(remaining_item)
 
-        # Sort items by created_time descending
         merged_list.sort(key=lambda x: str(x.get("created_time", "")), reverse=True)
 
-        # Save back to YAML
         try:
             with open(yaml_path, "w", encoding="utf-8") as f:
                 yaml.dump(merged_list, f, allow_unicode=True, sort_keys=False, default_flow_style=False)
-            logging.info(f"Updated {yaml_path} with {len(merged_list)} items.")
+            logging.info(f"Saved {yaml_path} with {len(merged_list)} items.")
         except Exception as e:
             logging.warning(f"Failed saving {yaml_path}: {e}")
 
@@ -299,11 +283,13 @@ def main():
     raw_data_by_shelf: Dict[str, List[Dict[str, Any]]] = {}
 
     for shelf_type in SHELF_TYPES:
-        raw_data_by_shelf[shelf_type] = fetch_shelf_data(shelf_type, NEODB_TOKEN)
+        raw_data_by_shelf[shelf_type] = []
+        for category in CATEGORIES:
+            cat_items = fetch_shelf_items(shelf_type, category, NEODB_TOKEN)
+            raw_data_by_shelf[shelf_type].extend(cat_items)
 
     grouped_data = process_items(raw_data_by_shelf)
 
-    # Base directory for YAML cache
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
     data_dir = os.path.join(project_root, "data", "neodb")
