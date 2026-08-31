@@ -12,6 +12,20 @@ from typing import Dict, Any, List, Optional
 import requests
 import yaml
 
+# Try loading python-dotenv or fallback .env parser
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    env_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+    if os.path.exists(env_file):
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ[k.strip()] = v.strip().strip("'\"")
+
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -120,45 +134,14 @@ def fetch_shelf_data(shelf_type: str, token: str) -> List[Dict[str, Any]]:
     """Fetch all pages for a given shelf status from NeoDB API."""
     items = []
     page = 1
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, Gecko) Chrome/120.0.0.0 Safari/537.36",
-    }
-
-    # Candidate URL templates for NeoDB instance variations
-    candidate_url_templates = [
-        f"{NEODB_API_BASE}/me/shelf/{shelf_type}?page={{page}}",
-        f"{NEODB_API_BASE}/me/shelf/{shelf_type}/?page={{page}}",
-        f"{NEODB_API_BASE}/me/shelf/all?shelf_type={shelf_type}&page={{page}}",
-    ]
-
-    working_template = None
+    headers = {"Authorization": f"Bearer {token}", "User-Agent": "Hugo-NeoDB-Sync/1.0"}
 
     while True:
-        if not working_template:
-            for tmpl in candidate_url_templates:
-                test_url = tmpl.format(page=page)
-                try:
-                    resp = requests.get(test_url, headers=headers, timeout=20, allow_redirects=True)
-                    if resp.status_code == 200:
-                        working_template = tmpl
-                        logging.info(f"Discovered working endpoint template: {tmpl}")
-                        break
-                    else:
-                        logging.warning(f"Endpoint candidate failed ({test_url}): HTTP {resp.status_code}")
-                except Exception as e:
-                    logging.warning(f"Endpoint candidate exception ({test_url}): {e}")
-            
-            if not working_template:
-                logging.error(f"None of the candidate API endpoints worked for shelf '{shelf_type}'.")
-                break
-
-        url = working_template.format(page=page)
+        url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}?page={page}"
         try:
-            resp = requests.get(url, headers=headers, timeout=20, allow_redirects=True)
+            resp = requests.get(url, headers=headers, timeout=20)
             if resp.status_code != 200:
-                logging.warning(f"Failed fetching {shelf_type} page {page}: HTTP {resp.status_code} (URL: {url})")
+                logging.warning(f"Failed fetching {shelf_type} page {page}: HTTP {resp.status_code}")
                 break
 
             data = resp.json()

@@ -8,3 +8,8 @@
 .vscode/
 .idea/
 *.swp
+
+# Local environment files (Secrets)
+.env
+.env.local
+.env.*.local
