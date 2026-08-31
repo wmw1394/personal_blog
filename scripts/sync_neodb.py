@@ -120,14 +120,18 @@ def fetch_shelf_data(shelf_type: str, token: str) -> List[Dict[str, Any]]:
     """Fetch all pages for a given shelf status from NeoDB API."""
     items = []
     page = 1
-    headers = {"Authorization": f"Bearer {token}", "User-Agent": "Hugo-NeoDB-Sync/1.0"}
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, Gecko) Chrome/120.0.0.0 Safari/537.36",
+    }
 
     while True:
-        url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}?page={page}"
+        url = f"{NEODB_API_BASE}/me/shelf/{shelf_type}/?page={page}"
         try:
-            resp = requests.get(url, headers=headers, timeout=20)
+            resp = requests.get(url, headers=headers, timeout=20, allow_redirects=True)
             if resp.status_code != 200:
-                logging.warning(f"Failed fetching {shelf_type} page {page}: HTTP {resp.status_code}")
+                logging.warning(f"Failed fetching {shelf_type} page {page}: HTTP {resp.status_code} (URL: {url})")
                 break
 
             data = resp.json()
