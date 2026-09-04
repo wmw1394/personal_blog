@@ -535,17 +535,17 @@
   created_time: '2022-04-21T09:40:11Z'
   shelf_type: wishlist
   comment_text: ''
-- uuid: 7bVs1bO3JzlPAfRnTwYBKg
-  title: 13 67
-  category: book
-  cover_url: https://neodb.social/m/book/2022/05/0148060a9a-6a10-4df3-bf2e-ff22c557ef40.jpg
-  created_time: '2022-04-19T06:41:25Z'
-  shelf_type: wishlist
-  comment_text: ''
 - uuid: 5TgwO2UrhEXyJKGlXAiSol
   title: '13.67'
   category: book
   cover_url: https://neodb.social/m/item/book/2023/10/09/f772b4ed-55a8-444e-806b-4846e4af3c73.jpg
+  created_time: '2022-04-19T06:41:25Z'
+  shelf_type: wishlist
+  comment_text: ''
+- uuid: 7bVs1bO3JzlPAfRnTwYBKg
+  title: 13 67
+  category: book
+  cover_url: https://neodb.social/m/book/2022/05/0148060a9a-6a10-4df3-bf2e-ff22c557ef40.jpg
   created_time: '2022-04-19T06:41:25Z'
   shelf_type: wishlist
   comment_text: ''
