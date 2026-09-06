@@ -1,0 +1,198 @@
+{{/*
+  Hugo AO3 Shortcode Card Component
+  Usage:
+    {{< ao3 "https://archiveofourown.org/works/12345678" "Custom reading note" >}}
+    {{< ao3 work_id="12345678" >}}
+    {{< ao3 "12345678" >}}
+*/}}
+
+{{/* Extract parameters */}}
+{{ $rawInput := "" }}
+{{ $paramComment := "" }}
+
+{{ if .IsNamedParams }}
+  {{ $rawInput = .Get "url" | default (.Get "work_id") | default (.Get 0) }}
+  {{ $paramComment = .Get "comment" }}
+{{ else }}
+  {{ $rawInput = .Get 0 }}
+  {{ if ge (len .Params) 2 }}
+    {{ $paramComment = .Get 1 }}
+  {{ end }}
+{{ end }}
+
+{{ $userComment := $paramComment | strings.TrimSpace }}
+
+{{/* Extract Work ID from URL or input */}}
+{{ $targetWorkID := "" }}
+{{ if $rawInput }}
+  {{ $clean := strings.TrimRight "/" $rawInput }}
+  {{ if findRE `^\d+$` $clean }}
+    {{ $targetWorkID = $clean }}
+  {{ else if findRE `/works/(\d+)` $clean }}
+    {{ $match := findRE `/works/(\d+)` $clean 1 }}
+    {{ if $match }}
+      {{ $targetWorkID = replaceRE `.*\/works\/(\d+).*` "$1" $clean }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Search across all years in data/ao3 */}}
+{{ $foundItem := dict }}
+{{ $dataAo3 := hugo.Data.ao3 | default .Site.Data.ao3 }}
+{{ if and $targetWorkID $dataAo3 }}
+  {{ range $year, $items := $dataAo3 }}
+    {{ range $item := $items }}
+      {{ if eq (string $item.work_id) (string $targetWorkID) }}
+        {{ $foundItem = $item }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Render Card if found */}}
+{{ if $foundItem.work_id }}
+  {{ $title := $foundItem.title | default "AO3 Work" }}
+  {{ $url := $foundItem.url | default (printf "https://archiveofourown.org/works/%s" $foundItem.work_id) }}
+  {{ $authors := $foundItem.authors | default (slice "Anonymous") }}
+  {{ $fandoms := $foundItem.fandoms | default (slice) }}
+  {{ $rating := $foundItem.rating | default "Not Rated" }}
+  {{ $relationships := $foundItem.relationships | default (slice) }}
+  {{ $freeforms := $foundItem.freeforms | default (slice) }}
+  {{ $summary := $foundItem.summary }}
+  {{ $words := $foundItem.words | default 0 }}
+  {{ $chapters := $foundItem.chapters | default "1/1" }}
+  {{ $isComplete := $foundItem.is_complete }}
+  {{ $visitedCount := $foundItem.visited_count | default 1 }}
+  {{ $lastVisitedDate := $foundItem.last_visited_date }}
+  {{ $finalComment := $userComment | default $foundItem.custom_comment }}
+
+  {{/* Rating Badge Style */}}
+  {{ $ratingStyle := "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700" }}
+  {{ $ratingLabel := $rating }}
+  {{ if eq $rating "Explicit" }}
+    {{ $ratingStyle = "bg-rose-100/90 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border-rose-200/80 dark:border-rose-800/80" }}
+    {{ $ratingLabel = "Explicit (E)" }}
+  {{ else if eq $rating "Mature" }}
+    {{ $ratingStyle = "bg-orange-100/90 dark:bg-orange-950/70 text-orange-800 dark:text-orange-300 border-orange-200/80 dark:border-orange-800/80" }}
+    {{ $ratingLabel = "Mature (M)" }}
+  {{ else if or (eq $rating "Teen And Up Audiences") (eq $rating "Teen") }}
+    {{ $ratingStyle = "bg-amber-100/90 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/80" }}
+    {{ $ratingLabel = "Teen (T)" }}
+  {{ else if or (eq $rating "General Audiences") (eq $rating "General") }}
+    {{ $ratingStyle = "bg-emerald-100/90 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/80" }}
+    {{ $ratingLabel = "General (G)" }}
+  {{ end }}
+
+  <div class="ao3-card group my-6 relative overflow-hidden rounded-xl border border-neutral-200/80 dark:border-neutral-800/90 bg-white/90 dark:bg-neutral-900/90 border-l-4 border-l-red-700 dark:border-l-red-600 shadow-sm hover:shadow-xl dark:hover:shadow-neutral-950/80 hover:border-red-600/40 dark:hover:border-red-500/40 transition-all duration-300 backdrop-blur-sm">
+    <div class="p-4 sm:p-5 flex flex-col gap-3">
+      
+      {{/* Header Row: Title & Badges */}}
+      <div class="flex items-start justify-between gap-3 flex-wrap sm:flex-nowrap">
+        <div class="grow min-w-0">
+          <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="ao3-title group/link inline-flex items-center gap-1.5 font-bold text-lg text-neutral-900 dark:text-neutral-100 hover:text-red-700 dark:hover:text-red-400 transition-colors leading-snug">
+            <span class="break-words">{{ $title }}</span>
+            <svg class="w-4 h-4 text-neutral-400 group-hover/link:text-red-600 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+          </a>
+          
+          <div class="text-xs text-neutral-600 dark:text-neutral-400 mt-0.5">
+            by <span class="font-medium text-neutral-800 dark:text-neutral-200">{{ delimit $authors ", " }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold border {{ $ratingStyle }}">
+            {{ $ratingLabel }}
+          </span>
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200/60 dark:border-red-800/60 flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            AO3
+          </span>
+        </div>
+      </div>
+
+      {{/* Fandom Tags */}}
+      {{ if $fandoms }}
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-neutral-500 dark:text-neutral-400 font-medium">Fandoms:</span>
+          {{ range $fandoms }}
+            <span class="px-2 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 font-medium border border-neutral-200/60 dark:border-neutral-700/60">
+              {{ . }}
+            </span>
+          {{ end }}
+        </div>
+      {{ end }}
+
+      {{/* Relationships */}}
+      {{ if $relationships }}
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-neutral-500 dark:text-neutral-400 font-medium">Pairs:</span>
+          {{ range $relationships }}
+            <span class="px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-medium border border-rose-200/50 dark:border-rose-900/50">
+              {{ . }}
+            </span>
+          {{ end }}
+        </div>
+      {{ end }}
+
+      {{/* Stats Bar */}}
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400 pt-1 border-t border-neutral-100 dark:border-neutral-800/60">
+        <div class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span>{{ lang.FormatNumber 0 $words }} words</span>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span>Chapters: {{ $chapters }}</span>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+          <span>Visited {{ $visitedCount }} {{ if eq $visitedCount 1 }}time{{ else }}times{{ end }}</span>
+        </div>
+
+        {{ if $lastVisitedDate }}
+          <div class="flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span>Last visited: <time class="font-mono text-[11px] text-neutral-600 dark:text-neutral-300">{{ $lastVisitedDate }}</time></span>
+          </div>
+        {{ end }}
+      </div>
+
+      {{/* Summary Box */}}
+      {{ if $summary }}
+        <div class="ao3-summary text-xs text-neutral-600 dark:text-neutral-300 bg-neutral-50/70 dark:bg-neutral-950/60 p-2.5 rounded-lg border border-neutral-100 dark:border-neutral-800/80 line-clamp-4 leading-relaxed">
+          {{ $summary }}
+        </div>
+      {{ end }}
+
+      {{/* Custom Reader Comment */}}
+      {{ if $finalComment }}
+        <div class="ao3-comment relative mt-1 p-3 rounded-lg bg-red-50/50 dark:bg-neutral-950/70 border-l-4 border-red-600 dark:border-red-500 border-t border-r border-b border-red-100 dark:border-neutral-800/80 text-sm text-neutral-700 dark:text-neutral-200 italic leading-relaxed">
+          <span class="text-red-500/60 dark:text-red-400/50 text-lg font-serif leading-none mr-1">“</span>
+          {{ $finalComment }}
+          <span class="text-red-500/60 dark:text-red-400/50 text-lg font-serif leading-none ml-1">”</span>
+        </div>
+      {{ end }}
+
+    </div>
+  </div>
+
+{{ else }}
+
+  {{/* Fallback when AO3 item is not yet synced */}}
+  <div class="ao3-fallback my-4 p-4 rounded-xl border border-dashed border-red-300/80 dark:border-red-800/80 bg-red-50/60 dark:bg-red-950/30 text-red-900 dark:text-red-300 text-sm flex items-center gap-3 backdrop-blur-sm shadow-sm">
+    <div class="p-2 rounded-lg bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 shrink-0">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div>
+      <div class="font-semibold text-red-900 dark:text-red-200 mb-0.5">AO3 Work 提示</div>
+      <div class="text-xs text-red-700/90 dark:text-red-400/90">
+        该 AO3 作品 (Work ID: <code class="px-1 py-0.5 rounded bg-red-100/80 dark:bg-red-900/60 font-mono text-[11px] text-red-900 dark:text-red-200">{{ $targetWorkID }}</code>) 尚未同步到本地数据，等待 AO3 同步脚本运行后将自动显示。
+      </div>
+    </div>
+  </div>
+
+{{ end }}

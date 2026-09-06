@@ -1,0 +1,50 @@
+name: Sync AO3 Reading History
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Run daily at 03:00 UTC
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  sync-ao3:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f scripts/requirements.txt ]; then pip install -r scripts/requirements.txt; fi
+
+      - name: Run AO3 Sync Script
+        env:
+          AO3_SESSION_COOKIE: ${{ secrets.AO3_SESSION_COOKIE }}
+          AO3_USERNAME: ${{ secrets.AO3_USERNAME }}
+          AO3_PASSWORD: ${{ secrets.AO3_PASSWORD }}
+          AO3_MAX_PAGES: "10"
+        run: |
+          python scripts/sync_ao3.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          if [ -n "$(git status --porcelain data/ao3)" ]; then
+            git add data/ao3
+            git commit -m "chore: sync ao3 reading history data [skip ci]"
+            git push
+          else
+            echo "No AO3 reading history changes detected. Skipping commit."
+          fi

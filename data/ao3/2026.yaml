@@ -1,0 +1,61 @@
+- work_id: "12345678"
+  title: "A Study in Crimson and Gold"
+  authors:
+    - "SherlockHolmesFan"
+    - "CoAuthorJane"
+  fandoms:
+    - "Sherlock (TV)"
+    - "Arthur Conan Doyle Works"
+  rating: "Explicit"
+  warnings:
+    - "No Archive Warnings Apply"
+  categories:
+    - "M/M"
+  relationships:
+    - "Sherlock Holmes/John Watson"
+  characters:
+    - "Sherlock Holmes"
+    - "John Watson"
+    - "Mycroft Holmes"
+  freeforms:
+    - "Alternate Universe - Modern"
+    - "Case Fic"
+    - "Slow Burn"
+  summary: "When a baffling mystery emerges in downtown London, Sherlock and John navigate clues, dangerous secrets, and unspoken feelings."
+  words: 45200
+  chapters: "12/12"
+  is_complete: true
+  visited_count: 5
+  last_visited_date: "2026-09-06"
+  created_time: "2026-09-06T12:00:00Z"
+  url: "https://archiveofourown.org/works/12345678"
+  custom_comment: "Absolutely incredible slow-burn case fic! Highly recommended."
+
+- work_id: "87654321"
+  title: "The Stars Above Hogwarts"
+  authors:
+    - "AstronomyFanatic"
+  fandoms:
+    - "Harry Potter - J. K. Rowling"
+  rating: "Teen And Up Audiences"
+  warnings:
+    - "Creator Chose Not To Use Archive Warnings"
+  categories:
+    - "Gen"
+  relationships:
+    - "Harry Potter & Hermione Granger"
+  characters:
+    - "Harry Potter"
+    - "Hermione Granger"
+  freeforms:
+    - "Fluff"
+    - "Stargazing"
+  summary: "A quiet midnight conversation on top of the Astronomy Tower."
+  words: 3800
+  chapters: "1/1"
+  is_complete: true
+  visited_count: 2
+  last_visited_date: "2026-08-28"
+  created_time: "2026-08-28T18:30:00Z"
+  url: "https://archiveofourown.org/works/87654321"
+  custom_comment: "Short, comforting read."
