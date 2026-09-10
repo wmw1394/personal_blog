@@ -1,61 +1,619 @@
-- work_id: "12345678"
-  title: "A Study in Crimson and Gold"
+- work_id: '40028670'
+  title: what in me is dark illumine
   authors:
-    - "SherlockHolmesFan"
-    - "CoAuthorJane"
+  - SydneyCarton
   fandoms:
-    - "Sherlock (TV)"
-    - "Arthur Conan Doyle Works"
-  rating: "Explicit"
-  warnings:
-    - "No Archive Warnings Apply"
-  categories:
-    - "M/M"
+  - Stranger Things (TV 2016)
+  rating: Teen And Up Audiences
+  warnings: []
+  categories: []
   relationships:
-    - "Sherlock Holmes/John Watson"
+  - Steve Harrington/Eddie Munson
   characters:
-    - "Sherlock Holmes"
-    - "John Watson"
-    - "Mycroft Holmes"
+  - Eddie Munson
+  - Steve Harrington
+  - Nancy Wheeler
+  - Murray Bauman
+  - Dustin Henderson
+  - Mike Wheeler
+  - Lucas Sinclair
+  - Gareth (Stranger Things)
+  - Jeff (Stranger Things)
+  - Martin Brenner
+  - Jason Carver
   freeforms:
-    - "Alternate Universe - Modern"
-    - "Case Fic"
-    - "Slow Burn"
-  summary: "When a baffling mystery emerges in downtown London, Sherlock and John navigate clues, dangerous secrets, and unspoken feelings."
+  - Alternate Universe - Prison
+  - Eddie writes a memoir
+  - inmate eddie
+  - correctional officer steve
+  - eddie is innocent
+  - POV Eddie Munson
+  - Hurt/Comfort
+  - Angst
+  - Fix-It of Sorts
+  summary: 'In 1986 Eddie Munson and several other teenagers were arrested and charged
+    with the murders of three high schoolers in Hawkins, Indiana. The ensuing trial
+    was rife with inconsistencies, false testimony and superstition.
+
+    Eddie Munson was accused of leading a cult involved in performing Satanic ritual
+    abuse—a result of the ‘Satanic Panic’ that gripped the American midwest at the
+    time. Three members of the Hellfire Club were sentenced to life in prison. Munson,
+    deemed the ringleader, was sentenced to death. He was nineteen years old.'
+  words: 4081
+  chapters: 2/11
+  is_complete: false
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/40028670
+  is_deleted: false
+- work_id: '18035843'
+  title: life's but a walking shadow
+  authors:
+  - SydneyCarton
+  fandoms:
+  - The Umbrella Academy (TV)
+  - The Umbrella Academy (Comics)
+  rating: Mature
+  warnings: []
+  categories: []
+  relationships:
+  - Diego Hargreeves & Klaus Hargreeves
+  characters:
+  - Klaus Hargreeves
+  - Diego Hargreeves
+  freeforms:
+  - Drug Addiction
+  - Drug Use
+  - Implied/Referenced Drug Use
+  - Underage Drug Use
+  - Suicide Attempt
+  - Suicidal Thoughts
+  - Sad
+  - Angst
+  - Klaus Hargreeves Deserves Better
+  - Reginald Hargreeves' A+ Parenting
+  - Protective Diego Hargreeves
+  - Good Brother Diego Hargreeves
+  - Klaus must be protected at all costs
+  - Diego does not approve
+  - Ghosts
+  - Diego intercepts police radio
+  - Everyone Needs a Hug
+  summary: 'Here he is—a junkie with nothing to his name except used needles and few
+    bags of pills and powder at the bottom of his coat pockets—mired in a bog of addiction
+    into which he walked willfully. How easy it would be, to sink until a roof of
+    water concealed him from everything he’s been running away from.
+
+    ***
+
+    Klaus wanders to the edge and Diego pulls him back again.'
+  words: 1590
+  chapters: 1/1
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/18035843
+  is_deleted: false
+- work_id: '17205938'
+  title: There Will be Better Days
+  authors:
+  - SydneyCarton
+  fandoms:
+  - The Pacific (TV)
+  rating: Teen And Up Audiences
+  warnings: []
+  categories: []
+  relationships:
+  - Merriell "Snafu" Shelton/Eugene Sledge
+  characters:
+  - Merriell "Snafu" Shelton
+  - Eugene Sledge
+  freeforms:
+  - Alternate Universe - High School
+  - Alternate Universe - Modern Setting
+  - Driving
+  - Nighttime
+  - Implied/Referenced Child Abuse
+  - Implied/Referenced Alcohol Abuse/Alcoholism
+  - Hurt/Comfort
+  - Emotional Hurt/Comfort
+  - Holidays
+  - Christmas
+  - Christmas Fluff
+  - Christmas Tree
+  - Theft
+  - Unsafe driving
+  - don't look at you phone when driving
+  - Eugene Sledge just wants to help his friend out
+  - Guilt
+  - tomorrow by miner
+  - song mention but it's not a song fic
+  - not following the law
+  - Snafu doesn't know how to talk about his feelings
+  - unsafe home environment
+  - First Kiss
+  - The Pacific
+  - sledgefu
+  - Texting
+  - Christmas Eve
+  summary: '"Even bathed in morning light Snafu didn’t have a face that could be painted.
+    Every angle, every harsh line was carved in stone."
+
+    ***
+
+    Eugene gets a series of frantic texts from Snafu in the middle of the night. It''s
+    Christmas Eve.'
+  words: 2578
+  chapters: 1/1
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/17205938
+  is_deleted: false
+- work_id: '13579452'
+  title: La Douleur Exquise
+  authors:
+  - SydneyCarton
+  fandoms:
+  - The Alienist (TV)
+  - The Alienist - Caleb Carr
+  rating: General Audiences
+  warnings: []
+  categories: []
+  relationships:
+  - Laszlo Kreizler/John Moore
+  characters:
+  - John Moore
+  - Laszlo Kreizler
+  - Sara Howard
+  freeforms:
+  - Luke Evans - Freeform
+  - Daniel Bruhl - Freeform
+  - Dakota Fanning - Freeform
+  - Crime
+  - Mystery
+  - Unrequited Love
+  - Angst
+  - pretentious imagery
+  - Love
+  - I Wrote This Instead of Sleeping
+  - New York
+  - Heavy Angst
+  - Period-Typical Sexism
+  - Period Typical Attitudes
+  - Period-Typical Homophobia
+  - Murder Mystery
+  summary: 'When he first looks into the guarded, vastly dark eyes of Laszlo Kreizler,
+    he cannot bring himself to say a thing. He can feel the cold water around his
+    ankles, rushing forward and dragging back like he is standing back on the beach.
+
+    He can see the boat.
+
+    ***
+
+    John Moore knows Dr. Laszlo Kreizler will never love him back—so why does he keep
+    torturing himself?'
+  words: 2033
+  chapters: 3/3
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/13579452
+  is_deleted: false
+- work_id: '12114378'
+  title: Red Balloon
+  authors:
+  - SydneyCarton
+  fandoms:
+  - IT (2017)
+  - IT - Stephen King
+  rating: Teen And Up Audiences
+  warnings: []
+  categories: []
+  relationships:
+  - Bill Denbrough & Pennywise (IT)
+  characters:
+  - Bill Denbrough
+  - Pennywise (IT)
+  - Beverly Marsh
+  - Mike Hanlon
+  - Richie Tozier
+  - Eddie Kaspbrak
+  - Stanley Uris
+  - Ben Hanscom
+  - Georgie Denbrough
+  freeforms:
+  - Clowns
+  - Self-Sacrifice
+  - Stuttering
+  - Fear
+  - Bill is a great friend
+  - Bill deserves better
+  - Pennywise is a dick
+  - Sewers
+  - BAMF Bill
+  - Horror
+  - Evil
+  - Balloons
+  - Morality
+  - Captivity
+  - Good Versus Evil
+  - Supernatural Elements
+  - Shapeshifting
+  - Phobias
+  - Pennywise the dancing clown
+  - Heavy Angst
+  - Angst
+  - Getting to Know Each Other
+  - Isolation
+  - Eldritch
+  - Immortality
+  - Violence
+  - Canon-Typical Violence
+  - Implied/Referenced Character Death
+  summary: '‘It’s all his fault.
+
+    He needs to make it right.
+
+    “Leave,” Bill gasps, dragging in a breath around the clown’s iron grip. “I’m the
+    one who dragged you all into this. I was—I’m s-s-s-sorry.”
+
+    “S-s-s-sorry,” IT mocks his stutter, cackling. His friends falter, but stay frozen
+    in place. They stare at him, disbelieving.’
+
+    ***
+
+    Billy sacrifices himself to IT to save his friends.'
+  words: 7266
+  chapters: 4/?
+  is_complete: false
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/12114378
+  is_deleted: false
+- work_id: '65451379'
+  title: Don't hurt yourself
+  authors:
+  - sweetlag
+  fandoms:
+  - Sinners (2025)
+  rating: Explicit
+  warnings: []
+  categories: []
+  relationships:
+  - Remmick (Sinners 2025)/Original Female Character(s)
+  characters:
+  - Remmick (Sinners 2025)
+  - Original Female Character(s)
+  - Annie (Sinners 2025)
+  - Grace Chow
+  - Bo Chow
+  - Mary (Sinners 2025)
+  freeforms:
+  - Slow Burn
+  - Enemies to Lovers
+  - Blood and Violence
+  - Smut
+  - Manipulation
+  - Witch - Freeform
+  - Vampires
+  - Racism
+  - Strong Female Characters
+  - Native American Character(s)
+  - Yearning
+  - He fell first and then harder
+  - Pathetic but possessive Remmick
+  - Found Family
+  - Fluff and Angst
+  summary: '“Do you remember the first time we met Irish boy?” asked the woman in
+    a low voice, hands tight on her gun while she reloaded the weapon, ammunition
+    falling to the ground.
+
+    A chuckle rose up from Remmick’s throat, filling the silence of the night. It
+    was light and almost childish at first, but his laughter quickly transformed into
+    a hoarse cough when the boot that held him down started to put more pressure on
+    his sternum, almost making it crack.
+
+    “How could I forget?” A vicious smile spread across his lips full of blood. “You
+    tried to kill me.” His red eyes gleamed through the night. “I guess some things
+    never change, huh?”
+
+    The story of Remmick and Sadie, or when a vampire messed with the wrong witch.'
+  words: 88332
+  chapters: 20/?
+  is_complete: false
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/65451379
+  is_deleted: false
+- work_id: '65337172'
+  title: The Ghost and the Song
+  authors:
+  - Anonymous
+  fandoms:
+  - Sinners (2025)
+  rating: Mature
+  warnings: []
+  categories: []
+  relationships:
+  - Remmick (Sinners 2025)/Original Female Character(s)
+  characters:
+  - Remmick (Sinners 2025)
+  - Original Female Character(s)
+  freeforms:
+  - Supernatural Elements
+  - Indigenous characters
+  - Choctaw Representation
+  - Slow Burn
+  - Pre-Canon (if part of a larger story)
+  - Hematophagy (Blood Drinking)
+  - Eldritch Elements
+  - Abandoned Work - Unfinished and Discontinued
+  summary: Some stories begin with a haunting. Others begin when the ghost is the
+    one haunted.
+  words: 10326
+  chapters: 5/5
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/65337172
+  is_deleted: false
+- work_id: '62089771'
+  title: helter skelter in a summer swelter
+  authors:
+  - Gingerwerk
+  fandoms:
+  - The Pacific (TV)
+  - Band of Brothers (TV 2001)
+  - Masters of the Air (TV 2024)
+  rating: Mature
+  warnings: []
+  categories: []
+  relationships:
+  - Merriell "Snafu" Shelton/Eugene Sledge
+  - R. V. Burgin/Florence Risely
+  characters:
+  - Eugene Sledge
+  - Merriell "Snafu" Shelton
+  - Bill Leyden
+  - Faye Tanner
+  - Robert Oswalt
+  - R. V. Burgin
+  - Florence Risely
+  - Jay De L'Eau
+  - Sidney "Sid" Phillips (The Pacific)
+  - Andrew A. "Ack-Ack" Haldane
+  - Edward "Hillbilly" Jones
+  - Helen (Masters of the Air)
+  freeforms:
+  - Alternate Universe
+  - Alternate Universe - Vietnam
+  - Alternate Universe - 1970s
+  - Roadtrip
+  - Dual Timeline
+  - Post-Traumatic Stress Disorder - PTSD
+  - Nightmares
+  - Flashbacks
+  - Panic Attacks
+  - Alcohol Abuse/Alcoholism
+  - Canon-Typical Violence
+  - Grief/Mourning
+  - Closure
+  - Helen Mota is pretty brief you do Not need to watch mota to get it okay
+  - i just think eugene is the type of guy to have a gaggle of lady friends
+  - who all try to give him advice but whether or not he takes it is up to him
+  - thank you mota for giving us more than one (1) female character
+  - this fic is what happens when you have two history degrees
+  - and miss doing intense but ultimately pointless research on a niche topic
+  - Canonical Character Death
+  - Light Smut
+  summary: 'In 1967, desperate to take part in his generation’s great war, nineteen-year-old
+    Eugene Sledge defied his family to join the Marines, completely unaware that this
+    decision would completely change the trajectory of his life.
+
+    In 1973, twenty-five-year-old Eugene Sledge finally felt as if he was getting
+    his life back together again when, after five years of silence, Snafu Shelton
+    appeared on his doorstep in Brooklyn with a question: “You ever seen the Grand
+    Canyon?”'
+  words: 126842
+  chapters: 10/?
+  is_complete: false
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/62089771
+  is_deleted: false
+- work_id: '65247154'
+  title: It Will Come Back
+  authors:
+  - maybemayleigh
+  fandoms:
+  - Sinners (2025)
+  rating: Explicit
+  warnings: []
+  categories: []
+  relationships:
+  - Remmick/Reader
+  - Remmick (Sinners 2025)/You
+  characters:
+  - Remmick (Sinners 2025)
+  - Reader
+  - Original Male Character(s)
+  freeforms:
+  - Porn with Plot
+  - Porn
+  - References to Ancient Celtic Religions & Lore
+  - Possibly Inaccurate Ancient Celtic Religions & Lore
+  - definitely Inaccurate gaelic
+  - Light Angst
+  - enemies to fuckbuddies to lovers
+  - Mutual Masturbation
+  - Mutual Pining
+  - LOTS OF MUTUAL MASTURBATION
+  - you both beat your meat on other sides of the door
+  - Male Masturbation
+  - Female Masturbation
+  - Blood Kink
+  - Threats of Violence
+  - Fear Play
+  - Spit Kink
+  - Dildos
+  - you both like each other and are afraid of what the means
+  - Eventual Sex
+  - Non-Penetrative Sex
+  - Penis in Vagina Sex
+  - Consensual but Not Safe or Sane
+  - Alternate Universe - Canon Divergence
+  - Alternate Universe - Modern Setting
+  - Appalachian Mountains
+  - setting is bc I'm homesick and hate florida
+  - SO MUCH SPIT
+  - blowjob
+  - FaceFucking
+  summary: 'After you move into the family cottage in the foothills of the Appalachian
+    Mountains, you find your family journal.  With dates back to when your family
+    fled Ireland during the Great Famine, you throw yourself into translating the
+    book to connect with your dead relatives.
+
+    Unfortunately, that also leads to you accidentally enticing Remmick to your front
+    door.  While you know better than to let him into your home, you can''t deny how
+    badly you want him.
+
+    Two times you can''t touch him, and the time you finally do.'
+  words: 14629
+  chapters: 4/4
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/65247154
+  is_deleted: false
+- work_id: '65192662'
+  title: Pledge
+  authors:
+  - turtlelover5000
+  fandoms:
+  - Dune (Movies - Villeneuve)
+  - Dune - All Media Types
+  rating: Explicit
+  warnings: []
+  categories: []
+  relationships:
+  - Paul Atreides/Feyd-Rautha Harkonnen
+  characters:
+  - Paul Atreides
+  - Feyd-Rautha Harkonnen
+  - Piter de Vries
+  - Iakin Nefud
+  - Irulan Corrino
+  - Margot Fenring
+  - Chani Kynes
+  - Leto Atreides I
+  - Vladimir Harkonnen
+  - Gurney Halleck
+  freeforms:
+  - Alternate Universe - College/University
+  - Alternate Universe - Fraternity
+  - Fraternities & Sororities
+  - POV Feyd-Rautha Harkonnen
+  - Feyd-Rautha Harkonnen Is His Own Warning
+  - Internalized Homophobia
+  - Hazing
+  - Feyd-Rautha Harkonnen Has Hair
+  - But it's shaved
+  - 1990s
+  - Shameless Smut
+  - Power Dynamics
+  - Dirty Talk
+  - Possessive Feyd-Rautha Harkonnen
+  - Implied/Referenced Child Abuse
+  - Psychological warfare to lovers
+  - Feyd’s a little shit and so is Paul
+  - Fated in all universes
+  - Period-Typical Homophobia
+  - Paul is Gender Fluid it’s Canon in My Mind
+  - Threats of Rape/Non-Con
+  summary: '“You’re not as scary as you think you are.”
+
+    “Fuck off, pledge.”
+
+    “Make me, Feyd.”
+
+    The one where Feyd accidentally fucks potential-pledge Paul, falls apart, and
+    gets put back together.'
+  words: 25442
+  chapters: 8/?
+  is_complete: false
+  visited_count: 1
+  last_visited_date: '2026-09-10'
+  created_time: '2026-09-10T00:00:00Z'
+  url: https://archiveofourown.org/works/65192662
+  is_deleted: false
+- work_id: '12345678'
+  title: A Study in Crimson and Gold
+  authors:
+  - SherlockHolmesFan
+  - CoAuthorJane
+  fandoms:
+  - Sherlock (TV)
+  - Arthur Conan Doyle Works
+  rating: Explicit
+  warnings:
+  - No Archive Warnings Apply
+  categories:
+  - M/M
+  relationships:
+  - Sherlock Holmes/John Watson
+  characters:
+  - Sherlock Holmes
+  - John Watson
+  - Mycroft Holmes
+  freeforms:
+  - Alternate Universe - Modern
+  - Case Fic
+  - Slow Burn
+  summary: When a baffling mystery emerges in downtown London, Sherlock and John navigate
+    clues, dangerous secrets, and unspoken feelings.
   words: 45200
-  chapters: "12/12"
+  chapters: 12/12
   is_complete: true
   visited_count: 5
-  last_visited_date: "2026-09-06"
-  created_time: "2026-09-06T12:00:00Z"
-  url: "https://archiveofourown.org/works/12345678"
-  custom_comment: "Absolutely incredible slow-burn case fic! Highly recommended."
-
-- work_id: "87654321"
-  title: "The Stars Above Hogwarts"
+  last_visited_date: '2026-09-06'
+  created_time: '2026-09-06T12:00:00Z'
+  url: https://archiveofourown.org/works/12345678
+  custom_comment: Absolutely incredible slow-burn case fic! Highly recommended.
+- work_id: '87654321'
+  title: The Stars Above Hogwarts
   authors:
-    - "AstronomyFanatic"
+  - AstronomyFanatic
   fandoms:
-    - "Harry Potter - J. K. Rowling"
-  rating: "Teen And Up Audiences"
+  - Harry Potter - J. K. Rowling
+  rating: Teen And Up Audiences
   warnings:
-    - "Creator Chose Not To Use Archive Warnings"
+  - Creator Chose Not To Use Archive Warnings
   categories:
-    - "Gen"
+  - Gen
   relationships:
-    - "Harry Potter & Hermione Granger"
+  - Harry Potter & Hermione Granger
   characters:
-    - "Harry Potter"
-    - "Hermione Granger"
+  - Harry Potter
+  - Hermione Granger
   freeforms:
-    - "Fluff"
-    - "Stargazing"
-  summary: "A quiet midnight conversation on top of the Astronomy Tower."
+  - Fluff
+  - Stargazing
+  summary: A quiet midnight conversation on top of the Astronomy Tower.
   words: 3800
-  chapters: "1/1"
+  chapters: 1/1
   is_complete: true
   visited_count: 2
-  last_visited_date: "2026-08-28"
-  created_time: "2026-08-28T18:30:00Z"
-  url: "https://archiveofourown.org/works/87654321"
-  custom_comment: "Short, comforting read."
+  last_visited_date: '2026-08-28'
+  created_time: '2026-08-28T18:30:00Z'
+  url: https://archiveofourown.org/works/87654321
+  custom_comment: Short, comforting read.
