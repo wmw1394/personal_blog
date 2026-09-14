@@ -1,3 +1,45 @@
+- work_id: deleted_1789375602
+  title: Deleted Work
+  authors:
+  - Unknown
+  fandoms:
+  - Deleted Work
+  rating: Not Rated
+  warnings: []
+  categories: []
+  relationships: []
+  characters: []
+  freeforms: []
+  summary: This work has been deleted from Archive of Our Own.
+  words: 0
+  chapters: N/A
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-14'
+  created_time: '2026-09-14T00:00:00Z'
+  url: https://archiveofourown.org/
+  is_deleted: true
+- work_id: deleted_1789375603
+  title: Deleted Work
+  authors:
+  - Unknown
+  fandoms:
+  - Deleted Work
+  rating: Not Rated
+  warnings: []
+  categories: []
+  relationships: []
+  characters: []
+  freeforms: []
+  summary: This work has been deleted from Archive of Our Own.
+  words: 0
+  chapters: N/A
+  is_complete: true
+  visited_count: 1
+  last_visited_date: '2026-09-14'
+  created_time: '2026-09-14T00:00:00Z'
+  url: https://archiveofourown.org/
+  is_deleted: true
 - work_id: '14449926'
   title: 细嚼慢咽
   authors:
@@ -1394,7 +1436,7 @@
   summary: '原剧向，私设如山，纯造谣，管你黑的白的全写成黄的。狗双性。
 
     3万字论证《九门》（佛狗版）剧情线收束本传的合理性。'
-  words: 31492
+  words: 31491
   chapters: 4/4
   is_complete: true
   visited_count: 1
