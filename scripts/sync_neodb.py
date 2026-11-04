@@ -188,6 +188,24 @@ def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[s
                 created_time = raw.get("created_time") or raw.get("created_at") or ""
                 comment_text = raw.get("comment_text") or raw.get("body") or ""
 
+                author = item_info.get("author") or item_info.get("artist") or item_info.get("director") or ""
+                if isinstance(author, list):
+                    author = ", ".join(author)
+
+                publisher = item_info.get("publisher") or item_info.get("platform") or ""
+                rating_score = raw.get("rating_score") or item_info.get("rating_score") or item_info.get("rating") or None
+                rating_count = item_info.get("rating_count") or None
+                brief = item_info.get("brief") or item_info.get("description") or ""
+                
+                # External resources (e.g. Douban)
+                external_url = ""
+                ext_res = item_info.get("external_resources") or []
+                if isinstance(ext_res, list):
+                    for res in ext_res:
+                        if isinstance(res, dict) and "douban" in str(res.get("url", "")).lower():
+                            external_url = res.get("url", "")
+                            break
+
                 if cover_url:
                     cover_url = upload_cover_to_r2(uuid, cover_url)
 
@@ -205,6 +223,18 @@ def process_items(raw_items_by_shelf: Dict[str, List[Dict[str, Any]]]) -> Dict[s
                     "shelf_type": shelf_type,
                     "comment_text": comment_text,
                 }
+                if author:
+                    item_entry["author"] = author
+                if publisher:
+                    item_entry["publisher"] = publisher
+                if rating_score:
+                    item_entry["rating_score"] = rating_score
+                if rating_count:
+                    item_entry["rating_count"] = rating_count
+                if brief:
+                    item_entry["brief"] = brief
+                if external_url:
+                    item_entry["external_url"] = external_url
 
                 # Deduplicate by uuid (keep first)
                 if uuid not in grouped[year]:

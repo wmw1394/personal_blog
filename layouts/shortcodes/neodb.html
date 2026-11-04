@@ -1,9 +1,8 @@
 {{/*
-  Hugo NeoDB Shortcode Card Component
+  Hugo NeoDB Shortcode Card Component (NeoDB Official Item-Card Layout)
   Usage:
-    {{< neodb "https://neodb.social/books/0189a123-4567-89ab-cdef-0123456789ab" "Custom comment" >}}
-    {{< neodb url="https://neodb.social/movies/0189a123-4567-89ab-cdef-0123456789ab" >}}
-    {{< neodb "https://neodb.social/game/0189a123-4567-89ab-cdef-0123456789ab" >}}
+    {{< neodb "https://neodb.social/books/6GWKIhbLRkpgQjdIDbANVE" "Custom comment" >}}
+    {{< neodb url="https://neodb.social/books/6GWKIhbLRkpgQjdIDbANVE" >}}
 */}}
 
 {{/* Extract parameters */}}
@@ -52,6 +51,13 @@
   {{ $createdTime := $foundItem.created_time }}
   {{ $cachedComment := $foundItem.comment_text }}
   {{ $finalComment := $userComment | default $cachedComment }}
+  {{ $author := $foundItem.author | default $foundItem.artists | default $foundItem.directors }}
+  {{ $publisher := $foundItem.publisher | default $foundItem.platform }}
+  {{ $ratingScore := $foundItem.rating_score | default $foundItem.rating }}
+  {{ $ratingCount := $foundItem.rating_count }}
+  {{ $description := $foundItem.description | default $foundItem.brief }}
+  {{ $externalUrl := $foundItem.external_url | default $foundItem.douban_url }}
+  {{ $neodbUrl := $url | default (printf "https://neodb.social/%s/%s" (cond (eq $category "book") "books" "movies") $foundItem.uuid) }}
 
   {{/* Action Verb Calculation */}}
   {{ $verbBase := "看" }}
@@ -83,59 +89,93 @@
   {{ end }}
 
   {{/* Format Date */}}
-  {{ $formattedDate := "" }}
+  {{ $formattedDateCn := "" }}
+  {{ $formattedDateIso := "" }}
   {{ if $createdTime }}
-    {{ $formattedDate = substr $createdTime 0 10 }}
+    {{ $formattedDateIso = substr $createdTime 0 10 }}
+    {{ $t := time $createdTime }}
+    {{ $formattedDateCn = printf "%d年%d月%d日" $t.Year $t.Month $t.Day }}
   {{ end }}
 
-  <div class="neodb-card group my-6 relative overflow-hidden rounded-xl border border-neutral-200/80 dark:border-neutral-800/90 bg-white/80 dark:bg-neutral-900/90 shadow-sm hover:shadow-xl dark:hover:shadow-neutral-950/80 hover:border-primary-500/40 dark:hover:border-primary-500/40 transition-all duration-300 backdrop-blur-sm">
-    <div class="p-4 sm:p-5 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5">
+  <article class="entity-sort item-card neodb-card group my-6 relative overflow-hidden rounded-xl border border-neutral-200/80 dark:border-neutral-800/90 bg-white/90 dark:bg-neutral-900/90 shadow-sm hover:shadow-xl dark:hover:shadow-neutral-950/80 hover:border-primary-500/40 dark:hover:border-primary-500/40 transition-all duration-300 backdrop-blur-sm p-4 sm:p-5">
+    
+    {{/* Top Action Bookmark Icon */}}
+    <span class="action absolute top-3.5 right-3.5 text-primary-500/70 dark:text-primary-400/70 hover:text-primary-600 dark:hover:text-primary-300 transition-colors">
+      <span>
+        <a class="activated cursor-pointer" title="{{ $actionVerb }}" href="{{ $neodbUrl }}" target="_blank" rel="noopener noreferrer">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M5 3c-1.1 0-2 .9-2 2v16l9-4 9 4V5c0-1.1-.9-2-2-2H5z"/>
+          </svg>
+        </a>
+      </span>
+    </span>
+
+    <div class="item flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5">
       {{ if $coverUrl }}
-        <div class="neodb-cover shrink-0 w-28 h-40 sm:w-32 sm:h-44 relative overflow-hidden rounded-lg shadow-md dark:shadow-neutral-950/80 border border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-100 dark:bg-neutral-800">
-          <img src="{{ $coverUrl }}" alt="{{ $title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 nozoom" loading="lazy" />
+        <div class="cover shrink-0 w-28 h-40 sm:w-32 sm:h-44 relative overflow-hidden rounded-lg shadow-md dark:shadow-neutral-950/80 border border-neutral-200/60 dark:border-neutral-700/60 bg-neutral-100 dark:bg-neutral-800">
+          <a href="{{ $neodbUrl }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ $coverUrl }}" alt="{{ $title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 nozoom" loading="lazy" />
+          </a>
           <div class="absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10 rounded-lg pointer-events-none"></div>
         </div>
       {{ end }}
 
-      <div class="neodb-info flex flex-col justify-between grow w-full min-w-0">
+      <div class="grow min-w-0 w-full flex flex-col justify-between">
         <div>
-          <div class="flex items-start justify-between gap-3 mb-2">
-            <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="neodb-title group/link flex items-center gap-1.5 font-bold text-lg text-neutral-900 dark:text-neutral-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors leading-snug">
-              <span>{{ $title }}</span>
-              <svg class="w-4 h-4 text-neutral-400 group-hover/link:text-primary-500 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-              </svg>
-            </a>
+          <hgroup class="mb-2 pr-8">
+            <h5 class="flex items-center gap-2 flex-wrap text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug">
+              <a href="{{ $neodbUrl }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                {{ $title }}
+              </a>
 
-            <div class="flex items-center gap-1.5 shrink-0">
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $badgeStyle }}">
-                {{ $actionVerb }}
-              </span>
-              {{ if $category }}
-                <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60 flex items-center">
-                  {{ if eq $category "book" }}
-                    <svg class="w-3 h-3 inline-block mr-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                  {{ else if or (eq $category "movie") (eq $category "tv") }}
-                    <svg class="w-3 h-3 inline-block mr-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
-                  {{ else if eq $category "game" }}
-                    <svg class="w-3 h-3 inline-block mr-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 00-2 2v1H6a2 2 0 00-2 2v7a2 2 0 002 2h3v2a1 1 0 001.414.914L14.828 19H18a2 2 0 002-2V9a2 2 0 00-2-2h-3V6a2 2 0 00-2-2h-2zM9 11h.01M15 11h.01M12 14h.01"></path></svg>
-                  {{ else if or (eq $category "music") (eq $category "podcast") (eq $category "album") }}
-                    <svg class="w-3 h-3 inline-block mr-1 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+              <small class="inline-flex items-center gap-1.5 font-normal text-xs">
+                <span class="site-list inline-flex items-center gap-1">
+                  {{ if $externalUrl }}
+                    <a href="{{ $externalUrl }}" target="_blank" rel="noopener noreferrer" class="douban px-1.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/50 hover:underline">
+                      豆瓣
+                    </a>
                   {{ end }}
-                  {{ $category }}
+                  <a href="{{ $neodbUrl }}" target="_blank" rel="noopener noreferrer" class="neodb px-1.5 py-0.5 rounded text-[11px] font-semibold bg-primary-100/80 dark:bg-primary-950/60 text-primary-700 dark:text-primary-300 border border-primary-200/50 dark:border-primary-800/50 hover:underline">
+                    NeoDB
+                  </a>
                 </span>
-              {{ end }}
-            </div>
-          </div>
+              </small>
+            </h5>
+          </hgroup>
 
-          {{ if $formattedDate }}
-            <div class="text-xs text-neutral-500 dark:text-neutral-400 flex items-center gap-1 mb-2">
-              <svg class="w-3.5 h-3.5 text-neutral-400 dark:text-neutral-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              <span>标记于 <time class="font-mono text-[11px] text-neutral-600 dark:text-neutral-300">{{ $formattedDate }}</time></span>
+          <div class="text-xs text-neutral-600 dark:text-neutral-300 space-y-1 mb-3">
+            <div class="brief">
+              <div class="multi-fields flex flex-wrap items-center gap-x-3 gap-y-1">
+                {{ if $ratingScore }}
+                  <span class="solo-hidden font-semibold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    {{ $ratingScore }}
+                    {{ if $ratingCount }}<small class="text-neutral-500 dark:text-neutral-400 font-normal">({{ $ratingCount }} 个评分)</small>{{ end }}
+                  </span>
+                {{ end }}
+
+                {{ if $author }}
+                  <span>作者: <span class="font-medium text-neutral-800 dark:text-neutral-200">{{ $author }}</span></span>
+                {{ end }}
+
+                {{ if $publisher }}
+                  <span>出版社: <span class="font-medium text-neutral-800 dark:text-neutral-200">{{ $publisher }}</span></span>
+                {{ end }}
+
+                {{ if $category }}
+                  <span class="uppercase font-semibold tracking-wider text-[11px] px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200/60 dark:border-neutral-700/60">
+                    {{ $category }}
+                  </span>
+                {{ end }}
+              </div>
             </div>
-          {{ end }}
+
+            {{ if $description }}
+              <div class="full mt-2 text-neutral-600 dark:text-neutral-300 leading-relaxed line-clamp-3">
+                {{ $description }}
+              </div>
+            {{ end }}
+          </div>
 
           {{ if $finalComment }}
             <div class="neodb-comment relative mt-3 p-3 rounded-lg bg-neutral-50/80 dark:bg-neutral-950/70 border-l-4 border-primary-500 dark:border-primary-400 border-t border-r border-b border-neutral-200/60 dark:border-neutral-800/80 text-sm text-neutral-700 dark:text-neutral-200 italic leading-relaxed">
@@ -147,7 +187,31 @@
         </div>
       </div>
     </div>
-  </div>
+
+    {{/* Footer Bar */}}
+    <footer class="mt-3 pt-2.5 border-t border-neutral-100 dark:border-neutral-800/80 flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+      <section class="w-full flex items-center justify-between">
+        <span class="action inline flex items-center gap-2">
+          <span class="timestamp font-mono text-[11px] text-neutral-600 dark:text-neutral-300 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 002-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            {{ if $formattedDateCn }}{{ $formattedDateCn }} {{ $actionVerb }}{{ else }}{{ $formattedDateIso }} {{ $actionVerb }}{{ end }}
+          </span>
+        </span>
+
+        <span class="action inline-flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-medium border {{ $badgeStyle }}">
+            {{ $actionVerb }}
+          </span>
+          <a href="{{ $neodbUrl }}" target="_blank" rel="noopener noreferrer" title="NeoDB" class="hover:text-primary-600 dark:hover:text-primary-400 opacity-80 hover:opacity-100 transition-opacity">
+            <svg class="w-4 h-4 fill-current inline-block" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+          </a>
+        </span>
+      </section>
+    </footer>
+
+  </article>
 
 {{ else }}
 

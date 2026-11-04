@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Hugo Blog Custom Visual Redesign (Art Styles Skill)
+   Light Background, Distinctive Typography, Light Green Touches & Staggered Motion
+   ========================================================================== */
+
+/* 1. Distinctive Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* 2. Light Green Theme Accents & Selection */
+::selection {
+  background-color: #D1FAE5; /* Light mint/emerald selection */
+  color: #065F46;
+}
+
+/* 3. Global Background & Ambient Light Green Glow */
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1E293B;
+  background-color: #FAFAF9;
+  background-image: 
+    radial-gradient(circle at 85% 15%, rgba(209, 250, 229, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(236, 253, 245, 0.8) 0%, transparent 50%),
+    radial-gradient(rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+code, pre, kbd, samp, .font-mono, time, .tag, article small {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 4. Link & Highlight Light Green Accents */
+a:hover {
+  color: #059669; /* Soft emerald hover accent */
+}
+
+/* 5. High-Impact Staggered Motion & Reveal Animations */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+article, .article-card, .neodb-card, .ao3-card, .card {
+  animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered reveals for sequential cards */
+article:nth-child(1), .card:nth-child(1) { animation-delay: 0.05s; }
+article:nth-child(2), .card:nth-child(2) { animation-delay: 0.10s; }
+article:nth-child(3), .card:nth-child(3) { animation-delay: 0.15s; }
+article:nth-child(4), .card:nth-child(4) { animation-delay: 0.20s; }
+article:nth-child(5), .card:nth-child(5) { animation-delay: 0.25s; }
+article:nth-child(6), .card:nth-child(6) { animation-delay: 0.30s; }
+
+/* 6. Enhanced Card Micro-Interactions & Light Green Glow */
+article, .neodb-card, .ao3-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  border-radius: 1rem;
+}
+
+article:hover, .neodb-card:hover, .ao3-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(16, 185, 129, 0.3) !important; /* Touch of light emerald border glow */
+  box-shadow: 0 12px 30px -4px rgba(16, 185, 129, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+}
+
+/* 7. Refined Shortcode & Badge Styling */
+.site-list a, .tag-list span a {
+  transition: all 0.2s ease;
+  border-radius: 0.375rem;
+}
+
+.site-list a:hover {
+  transform: scale(1.04);
+}
+
+/* 8. Hide Appearance / Dark Mode Switcher Buttons */
+#appearance-switcher,
+#appearance-switcher-mobile,
+#appearance-switcher-1,
+#appearance-switcher-2,
+.appearance-switcher,
+button[id*="appearance-switcher"] {
+  display: none !important;
+}
+
